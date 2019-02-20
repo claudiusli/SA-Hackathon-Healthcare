@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button} from 'react-md';
+import {Button, Collapse} from 'react-md';
 import MaterialTable from 'material-table';
 
 // Import the Stitch components required
@@ -13,7 +13,8 @@ export default class Patients extends Component {
 
         this.state = {
             data: [],
-            username: ''
+            username: '',
+            collapsed: true
         }
 
         this.onClick = this.onClick.bind(this);
@@ -24,7 +25,7 @@ export default class Patients extends Component {
     // list different fields according to user type
     listPatientsByUser(username) {
 
-        this.setState({username:username});
+        this.setState({username: username});
 
         // Start of Stitch use
         // Strictly for example.  Each user would most likely have a different password :)
@@ -49,11 +50,11 @@ export default class Patients extends Component {
                 limit: 30
                 //,sort: {"PATIENT_ID": 1}
             }).asArray();
-        // End of Stitch use
+            // End of Stitch use
 
         }).then(results => {
 
-            if(this.isUnmounted) {
+            if (this.isUnmounted) {
                 console.log("component unmounted");
                 return;
             }
@@ -65,9 +66,9 @@ export default class Patients extends Component {
     }
 
     componentDidMount() {
-        if(this.state.data.length === 0) {
+        if (this.state.data.length === 0) {
             this.setState({
-                data : this.listPatientsByUser('Doctor')
+                data: this.listPatientsByUser('Doctor')
             })
         }
     }
@@ -75,6 +76,14 @@ export default class Patients extends Component {
     componentWillUnmount() {
         this.isUnmounted = true;
     }
+
+    componentWillMount() {
+        this.setState({collapsed: true})
+    }
+
+    toggle = () => {
+        this.setState({collapsed: !this.state.collapsed});
+    };
 
     onClick(username) {
         this.setState({
@@ -84,39 +93,51 @@ export default class Patients extends Component {
 
     render() {
 
-        const {data} = this.state;
+        const {data, collapsed} = this.state;
+
         let mtData = [];
-        if(data.length > 0) {
+        if (data.length > 0) {
             mtData = data.slice();
         }
 
         return (
             <div className="md-grid">
-                <pre className="md-cell md-cell--12">
-                    <h4 className="md-cell md-cell--12">
-                    <b>Note: </b>This page is built using the <a target={"_blank"} href={"https://docs.mongodb.com/stitch/getting-started/configure-rules-based-access-to-mongodb/"}>Query Anywhere</a> functionality of Stitch. {"\n"}
-                    Additionally, results/fields are filtered based on the selected User Role.  {"\n"}
-                    This is controlled via <a target={"_blank"} href={"https://docs.mongodb.com/stitch/mongodb/mongodb-rules/"}>Rules</a> in MongoDB Stitch.
-                    </h4>
-                </pre>
                 <h2 className="md-cell md-cell--12">Patient Listing Page</h2>
                 <Button className="md-cell--left" raised primary onClick={() => this.onClick('Doctor')}>Doctor</Button>
-                <Button className="md-cell--left" raised primary onClick={() => this.onClick('Provider')}>Provider</Button>
-                <Button className="md-cell--left" raised primary onClick={() => this.onClick('Pharmacy')}>Pharmacy</Button>
+                <Button className="md-cell--left" raised primary
+                        onClick={() => this.onClick('Provider')}>Provider</Button>
+                <Button className="md-cell--left" raised primary
+                        onClick={() => this.onClick('Pharmacy')}>Pharmacy</Button>
                 <h4 className="md-cell md-cell--12"><b>Displaying data for user role: {this.state.username}</b></h4>
                 <MaterialTable
-                        columns={[{title: 'Patient ID', field: 'PATIENT_ID'},
-                            {title: 'SSN', field: 'SSN'},
-                            {title: 'First', field: 'FIRST'},
-                            {title: 'Last', field: 'LAST'},
-                            {title: 'Address', field: 'ADDRESS'},
-                            {title: 'Marital', field: 'MARITAL'},
-                            {title: 'Gender', field: 'GENDER'}]}
+                    columns={[{title: 'Patient ID', field: 'PATIENT_ID'},
+                        {title: 'SSN', field: 'SSN'},
+                        {title: 'First', field: 'FIRST'},
+                        {title: 'Last', field: 'LAST'},
+                        {title: 'Address', field: 'ADDRESS'},
+                        {title: 'Marital', field: 'MARITAL'},
+                        {title: 'Gender', field: 'GENDER'}]}
 
-                            data={mtData}
-                            title={"Patients"}/>
+                    data={mtData}
+                    title={"Patients"}/>
+
+            <div className="md-cell md-cell--12"/>
+                <Button className="md-cell--left" raised primary onClick={this.toggle}>Page Notes</Button>
+                <div className="md-cell md-cell--12"/>
+            <div className="md-cell md-cell--8">
+                <Collapse collapsed={collapsed}>
+                    <h4 className="md-cell md-cell--12">
+                            This page is built using the <a target={"_blank"}
+                                                                         href={"https://docs.mongodb.com/stitch/getting-started/configure-rules-based-access-to-mongodb/"}>Query Anywhere</a> functionality of Stitch. {"\n"}
+                        Additionally, results/fields are filtered based on the selected User Role. {"\n"}
+                        This is controlled via <a target={"_blank"}
+                                                  href={"https://docs.mongodb.com/stitch/mongodb/mongodb-rules/"}>Rules</a> in MongoDB Stitch.
+                    </h4>
+                </Collapse>
 
             </div>
+            </div>
+
         );
     }
 }
