@@ -7,11 +7,6 @@ export default class About extends Component {
         return (
 
             <div className="md-grid">
-                <h1>
-                    <b>!!!!!!!!!!!!!!!!!!!</b>
-                    <b>Links need to be updated when completed</b>
-                    <b>!!!!!!!!!!!!!!!!!!!</b>
-                </h1>
                 <h2 className="md-cell md-cell--12">
                     <Avatar src={img} role="presentation"/>
                     About This Application

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {Button, TextField, SelectField, Snackbar, DatePicker } from "react-md";
+import {Button, TextField, SelectField, Snackbar, DatePicker, Collapse} from "react-md";
 
 const ROUTES = ['Oral', 'Intramuscular', 'Intravenous', 'Intradermal', 'Topical', 'Sublingual'];
 const FREQUENCY = ['Daily', 'Every other day', '2x Daily', '3x Daily', 'Bedtime', 'Every 4 hours'];
 const STRENGTH = ['0.1mg', '0.5mg', '10mg', '20mg', '30mg'];
 
-const mdbStitchWebhook = 'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/hackathon-application-tgnby/service/addPrescriptionToPatientService/incoming_webhook/newPrescriptionWebhook?secret=mySecret';
+const mdbStitchWebhook = 'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/healthcare-application-yjsra/service/addPrescriptionToPatientService/incoming_webhook/newPrescriptionWebhook?secret=mySecret';
 
 export default class AddPrescriptionToPatient extends Component {
 
@@ -15,7 +15,8 @@ export default class AddPrescriptionToPatient extends Component {
         this.state = {
             toasts: [],
             savedPrescription: '',
-            dateWritten: new Date()
+            dateWritten: new Date(),
+            collapsed: true
         };
 
         this.patientIdField = React.createRef();
@@ -27,21 +28,29 @@ export default class AddPrescriptionToPatient extends Component {
         this.refillsField = React.createRef();
 
         this.handleChange = this.handleChange.bind(this);
+
+        this.isUnmounted = false;
     }
 
     postNewPrescription(prescriptionData) {
         console.log("Insert new prescription: " + JSON.stringify(prescriptionData));
 
-        fetch( mdbStitchWebhook,{
+        fetch(mdbStitchWebhook, {
             method: 'POST',
-            headers: {'Content-type':'application/json'},
+            headers: {'Content-type': 'application/json'},
             body: JSON.stringify(prescriptionData)
         })
             .then(response => response.json())
             .then(json => {
+
+                if (this.isUnmounted) {
+                    console.log("component unmounted");
+                    return;
+                }
+
                 console.log("Result: " + json);
 
-                if(!this.state.toasts.length) {
+                if (!this.state.toasts.length) {
                     const toasts = this.state.toasts.slice();
                     toasts.push({
                         text: json,
@@ -56,14 +65,14 @@ export default class AddPrescriptionToPatient extends Component {
                     });
                 }
             })
-            .catch(function(ex) {
+            .catch(function (ex) {
                 console.log('Error on post to new prescription', ex);
             })
     }
 
     handleChange(dateString, dateObject, event) {
         this.setState({
-            dateWritten:dateObject
+            dateWritten: dateObject
         })
     }
 
@@ -105,14 +114,14 @@ export default class AddPrescriptionToPatient extends Component {
             dateWrittenValue = this.state.dateWritten;
 
             newPrescription = {
-                patientId : patientIdValue,
-                medication : medicationValue,
-                strength : strengthValue,
-                amount : amountValue,
-                frequency : frequencyValue,
-                route : routeValue,
-                refills : refillsValue,
-                dateWritten : dateWrittenValue
+                patientId: patientIdValue,
+                medication: medicationValue,
+                strength: strengthValue,
+                amount: amountValue,
+                frequency: frequencyValue,
+                route: routeValue,
+                refills: refillsValue,
+                dateWritten: dateWrittenValue
             }
 
             this.postNewPrescription(newPrescription);
@@ -127,100 +136,141 @@ export default class AddPrescriptionToPatient extends Component {
         })
     };
 
+    componentWillUnmount() {
+        this.isUnmounted = true;
+    }
+
+    componentWillMount() {
+        this.setState({collapsed: true})
+    }
+
+    toggle = () => {
+        this.setState({collapsed: !this.state.collapsed});
+    };
+
     render() {
 
-        const{ toasts } = this.state;
+        const {toasts, collapsed} = this.state;
 
         return (
 
             <div className="md-grid">
-                <pre className="md-cell md-cell--12">
-                    <h4 className="md-cell md-cell--12">
-                    <b>Note: </b>This page is using the <a target={"_blank"} href={"https://docs.mongodb.com/stitch/services/create-a-service-webhook/index.html"}>Webhook</a> feature of MongoDB Stitch.  This enables the ability to {"\n"}
-                    define a REST-enabled endpoint that can accept HTTP GET and POST requests.  This page {"\n"}
-                    is posting the contents of a new prescription to an endpoint that is backed by an {"\n"}
-                    associated function which handles the insert.
-                    </h4>
-                </pre>
-                <h2 className="md-cell md-cell--12">Add Prescription to Patient</h2>
-                <h4 className="md-cell md-cell--12"><b>{this.state.savedPrescription}</b></h4>
+                <div className="md-cell md-cell--12">
+                        <h2>Add Prescription to Patient</h2>
+                        <h4><b>{this.state.savedPrescription}</b></h4>
+                </div>
 
                 <form onSubmit={this.handleSubmit}
                       onReset={this.handleReset}>
-                    <TextField
-                        id="patientId"
-                        label="Enter Patient ID"
-                        ref={this.patientIdField}
-                        className="md-cell md-cell--12"
-                        required
-                    />
-                    <TextField
-                        id="medication"
-                        label="Enter Medication Name"
-                        ref={this.medicationField}
-                        className="md-cell md-cell--12"
-                        required
-                    />
-                    <TextField
-                        id="amount"
-                        label="Amount"
-                        type="number"
-                        defaultValue={1}
-                        className="md-cell md-cell--12"
-                        required
-                        ref={this.amountField}
-                    />
-                    <SelectField
-                        id="strength"
-                        label="Strength"
-                        className="md-cell md-cell--12"
-                        menuItems={STRENGTH}
-                        required
-                        ref={this.strengthField}
-                        defaultValue='0.1mg'
-                    />
-                    <SelectField
-                        id="frequency"
-                        label="Frequency"
-                        className="md-cell md-cell--12"
-                        menuItems={FREQUENCY}
-                        required
-                        ref={this.frequencyField}
-                        defaultValue='Daily'
-                    />
-                    <SelectField
-                        id="route"
-                        label="Route"
-                        className="md-cell md-cell--12"
-                        menuItems={ROUTES}
-                        required
-                        ref={this.routeField}
-                        defaultValue='Oral'
-                    />
-                    <TextField
-                        id="refills"
-                        label="Refills"
-                        type="number"
-                        defaultValue={0}
-                        step={1}
-                        max={11}
-                        className="md-cell md-cell--12"
-                        required
-                        ref={this.refillsField}
-                    />
-                    <DatePicker
-                        id='dateWritten'
-                        label='Date Written'
-                        required
-                        value={this.state.dateWritten}
-                        className="md-cell md-cell--12"
-                        onChange={this.handleChange}
-                    />
-                    <Button className="md-cell" raised primary type="submit">Submit</Button>
-                    <Button className="md-cell" raised primary type="reset">Reset</Button>
-                    <Snackbar id="toasts" toasts={toasts} onDismiss={this.handleDismiss} autohide={false}/>
+                    <div className="md-cell md-cell--12">
+                            <TextField
+                                id="patientId"
+                                label="Enter Patient ID"
+                                ref={this.patientIdField}
+                                required
+
+                            />
+                    </div>
+                    <div className="md-cell md-cell--12">
+                            <TextField
+                                id="medication"
+                                label="Enter Medication Name"
+                                ref={this.medicationField}
+                                required
+                            />
+                    </div>
+                    <div className="md-cell md-cell--4">
+                            <TextField
+                                id="amount"
+                                label="Amount"
+                                type="number"
+                                defaultValue={1}
+                                required
+                                ref={this.amountField}
+                            />
+                    </div>
+                    <div className="md-cell md-cell--4">
+                            <SelectField
+                                id="strength"
+                                label="Strength"
+                                menuItems={STRENGTH}
+                                required
+                                ref={this.strengthField}
+                                defaultValue='0.1mg'
+                            />
+                    </div>
+                    <div className="md-cell md-cell--4">
+                            <SelectField
+                                id="frequency"
+                                label="Frequency"
+                                menuItems={FREQUENCY}
+                                required
+                                ref={this.frequencyField}
+                                defaultValue='Daily'
+                            />
+                    </div>
+                    <div className="md-cell md-cell--4">
+                            <SelectField
+                                id="route"
+                                label="Route"
+                                menuItems={ROUTES}
+                                required
+                                ref={this.routeField}
+                                defaultValue='Oral'
+                            />
+                    </div>
+                    <div className="md-cell md-cell--4">
+                            <TextField
+                                id="refills"
+                                label="Refills"
+                                type="number"
+                                defaultValue={0}
+                                step={1}
+                                max={11}
+                                required
+                                ref={this.refillsField}
+                            />
+                    </div>
+                    <div className="md-cell md-cell--8">
+                            <DatePicker
+                                id='dateWritten'
+                                label='Date Written'
+                                required
+                                value={this.state.dateWritten}
+                                onChange={this.handleChange}
+                            />
+                    </div>
+
+                            <Button className="md-cell--left" raised primary type="submit">Submit</Button>
+
+
+                            <Button className="md-cell--left" raised primary type="reset">Reset</Button>
+
+
                 </form>
+
+                <div className="md-cell md-cell--12"/>
+
+                        <Button className="md-cell--left" raised primary onClick={this.toggle}>Page Notes</Button>
+                <div className="md-cell md-cell--12"/>
+
+
+                <div className="md-cell md-cell--8">
+                    <Collapse collapsed={collapsed}>
+                        <h4>
+                            This page is using the <a target={"_blank"}
+                                                      href={"https://docs.mongodb.com/stitch/services/create-a-service-webhook/index.html"}>Webhook</a> feature
+                            of MongoDB Stitch. This enables the ability to {"\n"}
+                            define a REST-enabled endpoint that can accept HTTP GET and POST requests. This page {"\n"}
+                            is posting the contents of a new prescription to an endpoint that is backed by an {"\n"}
+                            associated function which handles the insert.
+                        </h4>
+                    </Collapse>
+                </div>
+
+                <Snackbar id="toasts" toasts={toasts} onDismiss={this.handleDismiss} autohide={false}/>
             </div>
+
         );
     }
 }

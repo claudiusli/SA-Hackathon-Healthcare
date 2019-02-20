@@ -1102,7 +1102,7 @@ a.md-btn {
   background: rgba(76, 175, 80, 0.12); }
 
 .md-btn--color-secondary-active {
-  background: rgba(76, 175, 80, 0.12); }
+  background: rgba(244, 67, 54, 0.12); }
 
 .md-btn--text {
   border-radius: 2px;
@@ -1481,7 +1481,7 @@ tbody .md-table-row {
     margin-left: 8px; }
 
 .md-card-title--contextual {
-  background: #e8f5e9;
+  background: #ffebee;
   height: 100%;
   left: 0;
   position: absolute;
@@ -1490,7 +1490,7 @@ tbody .md-table-row {
   z-index: 1; }
 
 .md-card-title--title-contextual {
-  color: #4caf50;
+  color: #f44336;
   font-size: 16px;
   font-weight: 500;
   line-height: 80px; }
@@ -2502,7 +2502,7 @@ svg.md-icon {
 
 .md-circular-progress-path {
   fill: none;
-  stroke: #4caf50;
+  stroke: #f44336;
   stroke-dasharray: 187px; }
 
 .md-circular-progress-path--animated {
@@ -2531,14 +2531,14 @@ svg.md-icon {
     stroke-dashoffset: 187px; } }
 
 .md-progress--linear {
-  background: #b9f6ca;
+  background: #ff8a80;
   height: 3px;
   overflow: hidden;
   position: relative;
   width: 100%; }
 
 .md-progress--linear-active {
-  background: #4caf50; }
+  background: #f44336; }
 
 .md-progress--linear-determinate {
   height: 100%;
@@ -2663,7 +2663,7 @@ svg.md-icon {
   width: 40px; }
 
 .md-switch-track--on {
-  background: rgba(76, 175, 80, 0.5); }
+  background: rgba(244, 67, 54, 0.5); }
 
 .md-switch-track--off {
   background: rgba(0, 0, 0, 0.38); }
@@ -2683,7 +2683,7 @@ svg.md-icon {
   width: 24px; }
 
 .md-switch-thumb--on {
-  background: #4caf50;
+  background: #f44336;
   transform: translate3d(20px, -4px, 0); }
 
 .md-switch-thumb--off {
@@ -3025,7 +3025,7 @@ svg.md-icon {
     color: rgba(255, 255, 255, 0.7); }
 
 .md-tab-indicator {
-  background: #4caf50;
+  background: #f44336;
   bottom: 0;
   content: '';
   height: 2px;
@@ -3634,7 +3634,7 @@ svg.md-icon {
   .md-text--theme-primary {
     color: #4caf50; }
   .md-text--theme-secondary {
-    color: #4caf50; }
+    color: #f44336; }
   .md-text--error {
     color: #f44336; }
   .md-text--inherit.md-text--inherit {
@@ -3644,7 +3644,7 @@ svg.md-icon {
   background: rgba(76, 175, 80, 0.26); }
 
 .md-ink--secondary .md-ink {
-  background: rgba(76, 175, 80, 0.26); }
+  background: rgba(244, 67, 54, 0.26); }
 
 .md-background {
   background: #fafafa; }
@@ -3654,14 +3654,14 @@ svg.md-icon {
     background: #4caf50;
     color: #fff; }
   .md-background--secondary {
-    background: #4caf50;
+    background: #f44336;
     color: #fff; }
 
 @media screen and (min-width: 1025px) {
   .md-background--primary-hover:hover {
     background: rgba(76, 175, 80, 0.9); }
   .md-background--secondary-hover:hover {
-    background: rgba(76, 175, 80, 0.9); } }
+    background: rgba(244, 67, 54, 0.9); } }
 
 body {
   margin: 0;
@@ -3678,3 +3678,14 @@ body {
   flex-direction: column;
   align-items: center;
   max-height: 125px; }
+
+.badges {
+  margin: 1em; }
+
+.grid-example .md-cell {
+  height: 10px;
+  padding: 16px; }
+
+.divider-example .md-cell {
+  margin-top: 5px;
+  margin-bottom: 5px; }

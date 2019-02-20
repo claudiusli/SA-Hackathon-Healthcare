@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, List, ListItem, Subheader} from 'react-md';
+import {Button, List, ListItem, Subheader, Collapse} from 'react-md';
 import MaterialTable from 'material-table';
 import Moment from 'react-moment';
 
@@ -14,7 +14,8 @@ export default class PrescriptionsToFill extends Component {
 
         this.state = {
             data: [],
-            selectedPrescriptionsToFill: []
+            selectedPrescriptionsToFill: [],
+            collapsed: true
         }
 
         this.onClick = this.onClick.bind(this);
@@ -122,6 +123,14 @@ export default class PrescriptionsToFill extends Component {
         this.isUnmounted = true;
     }
 
+    componentWillMount() {
+        this.setState({collapsed: true})
+    }
+
+    toggle = () => {
+        this.setState({collapsed: !this.state.collapsed});
+    };
+
     onClick() {
         this.setState({
             data: this.listPrescriptionsToFill(),
@@ -148,7 +157,7 @@ export default class PrescriptionsToFill extends Component {
 
     render() {
 
-        const {data} = this.state;
+        const {data, collapsed} = this.state;
         const {selectedPrescriptionsToFill} = this.state;
         let mtData = [];
         if(data.length > 0) {
@@ -160,7 +169,7 @@ export default class PrescriptionsToFill extends Component {
 
 
         if(selectedPrescriptionsToFill.length > 0){
-            fillPrescriptionsButton = <Button className="md-cell md-cell--3" raised primary onClick={() => this.onClickFillPrescription()}>Fill Selected</Button>
+            fillPrescriptionsButton = <Button className="md-cell--left" raised primary onClick={() => this.onClickFillPrescription()}>Fill Selected</Button>
             scriptsList = <List className='md-cell md-cell--12'><Subheader primaryText="Fill the following selected prescriptions:" />{selectedPrescriptionsToFill.map((item,key) => (
                 <ListItem key={key} primaryText={item.patientId + ' - ' + item.medication}/>
                 )
@@ -169,16 +178,8 @@ export default class PrescriptionsToFill extends Component {
 
         return (
             <div className="md-grid">
-                <pre className="md-cell md-cell--12">
-                    <h4 className="md-cell md-cell--12">
-                    <b>Note: </b>This page is built using the <a target={"_blank"} href={"https://docs.mongodb.com/stitch/getting-started/configure-rules-based-access-to-mongodb/"}>Query Anywhere</a> functionality of Stitch. {"\n"}
-                        For this example, if a new prescription is added that has not been filled by the Pharmacy, a document is written to a new collection.  {'\n'}
-                        All prescriptions not filled are listed on this page.  When a prescription is selected, the user can "fill" it.  When the prescription is filled,{"\n"}
-                        a <a target={"_blank"} href={"https://docs.mongodb.com/stitch/triggers/"}>Stitch Trigger</a> is fired that will send a notification via Twilio/Slack/etc.
-                    </h4>
-                </pre>
                 <h2 className="md-cell md-cell--12">Prescriptions To Fill</h2>
-                <Button className="md-cell md-cell--2" raised primary onClick={() => this.onClick()}>Refresh</Button>
+                <Button className="md-cell--left" raised primary onClick={() => this.onClick()}>Refresh</Button>
                 {fillPrescriptionsButton}
                 {scriptsList}
                 <div style={{width:'100%'}}>
@@ -215,6 +216,19 @@ export default class PrescriptionsToFill extends Component {
                     onSelectionChange={data => this.mtOnClick(data)}
 
                 />
+                </div>
+                <div className="md-cell md-cell--12"/>
+                <Button className="md-cell--left" raised primary onClick={this.toggle}>Page Notes</Button>
+                <div className="md-cell md-cell--12"/>
+                <div className="md-cell md-cell--8">
+                <Collapse collapsed={collapsed}>
+                    <h4 className="md-cell md-cell--12">
+                        This page is built using the <a target={"_blank"} href={"https://docs.mongodb.com/stitch/getting-started/configure-rules-based-access-to-mongodb/"}>Query Anywhere</a> functionality of Stitch. {"\n"}
+                        For this example, if a new prescription is added that has not been filled by the Pharmacy, a document is written to a new collection.  {'\n'}
+                        All prescriptions not filled are listed on this page.  When a prescription is selected, the user can "fill" it.  When the prescription is filled,{"\n"}
+                        a <a target={"_blank"} href={"https://docs.mongodb.com/stitch/triggers/"}>Stitch Trigger</a> is fired that will send a notification via Twilio/Slack/etc.
+                    </h4>
+                </Collapse>
                 </div>
 
             </div>

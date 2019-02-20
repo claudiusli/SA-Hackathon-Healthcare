@@ -20,3 +20,23 @@ body {
   align-items: center;
   max-height: 125px;
 }
+
+.badges {
+  margin: 1em;
+}
+
+.grid-example {
+
+  .md-cell {
+    height: 10px;
+    padding: $md-default-padding;
+  }
+}
+
+.divider-example {
+
+  .md-cell {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}

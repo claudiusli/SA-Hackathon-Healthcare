@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"sahackathon.health"},{"v":2,"key":{"PATIENT_ID":1},"name":"patientId_IDX","ns":"sahackathon.health"},{"v":2,"key":{"FIRST":1,"LAST":1},"name":"firstLast_IDX","ns":"sahackathon.health"}],"uuid":"55adc6eebb8b4fe186511cf188fd8f5c"}
