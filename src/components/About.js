@@ -25,8 +25,8 @@ export default class About extends Component {
                     <a target={"_blank"} href={"https://react-md.mlaursen.com/"}>react-md (Material Design for React)</a>{"\n"}
                     <a target={"_blank"} href={"https://react-md.mlaursen.com/"}>material-table (DataTable based on the material-ui table component)</a>{"\n\n"}
                         <b>Source Code</b>{"\n"}
-                    <a target={"_blank"} href={"http://www.mongodb.com"}>GitHub Source Code for React Frontend</a>{"\n"}
-                    <a target={"_blank"} href={"http://www.mongodb.com"}>GitHub Source Code for MongoDB Stitch Application</a>{"\n\n"}
+                    <a target={"_blank"} href={"https://github.com/blainemincey/SA-Hackathon-Healthcare/tree/master/src/components"}>GitHub Source Code for React Frontend</a>{"\n"}
+                    <a target={"_blank"} href={"https://github.com/blainemincey/SA-Hackathon-Healthcare"}>GitHub Source Code for MongoDB Stitch Application</a>{"\n\n"}
 
                     <b>Questions?</b>  Reach out to the following Atlanta based MongoDB Solutions Architects:{"\n"}
                     Blaine Mincey - <a href={"mailto:blaine.mincey@mongodb.com"}>blaine.mincey@mongodb.com</a>{"\n"}
